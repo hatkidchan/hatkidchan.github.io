@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title> ~~ Welcome! ~~</title>
+    <link rel="stylesheet" href="static/floating.css">
+    <link rel="stylesheet" href="static/main.css">
+    <script src="static/floating.js"></script>
+    <script src="static/palettes.js"></script>
+    <script src="static/hatty.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <div class="window" id="terminal-window">
+        <div class="window-title">hkc@spaceship01u:~</div>
+        <div class="window-content">
+          <canvas id="terminal-canvas">
+            <h1>Oops!</h1>
+            <p>Looks like your browser has no canvas support!</p>
+            <p>Try different browser, such as Firefox or Chrome</p>
+          </canvas>
+        </div>
+      </div>
+      </div>
+      <script>
+      var wnd_elem = document.querySelector('#terminal-window');
+      var canv_elem = document.querySelector('#terminal-canvas');
+      var term = new HaTTY(canv_elem, {
+        'palette': termpalettes.satori,
+        'font': '20px monospace',
+        'char_w': 12, 'char_h': 24,
+        'char_x': 0, 'char_y': 4,
+        'size_x': 80, 'size_y': 24
+      });
+      var wnd = new FloatingWindow(wnd_elem, term.elem.width, term.elem.height);
+      wnd.setPos(50, 50);
+      /*
+      term.addEventListener('move', function(e) {
+        term.write('\x1b[' + (e.pos.y - 1) + ';' + (e.pos.x - 1) + 'H');
+        var r = Math.floor(e.pos.y * 250 / 24),
+            g = Math.abs(Math.floor(Math.sin(e.pos.x / 80 + e.pos.y / 24) * 250)),
+            b = Math.floor(e.pos.x * 250 / 80);
+        var color = r + ';' + g + ';' + b;
+        term.write('\x1b[48;2;' + color + 'm \x1b[0m');
+      });
+      */
+      /*
+      function place(x, y) {
+        var rx = x / 80,
+            ry = y / 24;
+        term.write('\x1b[' + y + ';' + x + 'H');
+        var r = Math.floor(rx * 255),
+            g = 0,
+            b = Math.floor(ry * 255);
+        var color = r + ';' + g + ';' + b;
+        term.write('\x1b[48;2;' + color + 'm \x1b[0m');
+      }
+      function randomPlace() {
+        for(var _ = 0; _ < 2; _++) {
+          var x = Math.floor(Math.random() * 80),
+              y = Math.floor(Math.random() * 24);
+          place(x, y);
+        }
+        requestAnimationFrame(randomPlace);
+      }
+      randomPlace();
+      */
+      /*
+      term.addEventListener('move', function(e) {
+        term.write(e.pos.x + ' : ' + e.pos.y + '  \r');
+      });
+      */
+      
+      function termClock() {
+        var t = new Date();
+        var s = t.getTime() / 1000;
+        var x = Math.floor(Math.sin(s) * 32 + 32),
+            y = Math.floor(Math.cos(s * 1.1) * 12 + 12);
+        
+        var h = t.getHours(),
+            m = t.getMinutes(),
+            s = t.getSeconds();
+        var text = (h < 10 ? '0' : '') + h + ':';
+        text += (m < 10 ? '0' : '') + m + ':';
+        text += (s < 10 ? '0' : '') + s;
+
+        term.write('\x1b[2K\x1b[' + y + ';' + x + 'f');
+        term.write('\x1b[31m' + text + '\x1b[0m');
+        
+        requestAnimationFrame(termClock);
+      }
+      window.addEventListener('load', function() {
+        termClock();
+        var prompt_s = '\x1b[32mhkc\x1b[36m@\x1b[32mspaceship01u\x1b[34m ~';
+        var contents = prompt_s + '\n';
+        contents += '\x1b[32m$ \x1b[0mecho -e \'a\\e[Bb\\e[Bc\'\n';
+        contents += 'a\x1b[Bb\x1b[Bc\n';
+        contents += '\x1b[?9l' + prompt_s + '\n';
+        contents += '\x1b[32m$ ';
+        // term.slow_write('\x1b[?9h' + contents).then(function() {
+        // });
+      });
+      
+      </script>
+    </body>
+</html>
+
