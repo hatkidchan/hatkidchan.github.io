@@ -175,7 +175,6 @@ function HaTTY(elem, opts) {
           this._resetCSI();
           return this;
         } else if(c == 'K') {
-          console.debug('opcode K buffer', this.buf);
           if(this.buf == '' || this.buf == '0')
             this._clearRegion(this.cursor.x, this.cursor.y, this.size.w - 1, this.cursor.y);
           else if(this.buf == '1')
